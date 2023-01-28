@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import Header from '../components/Header';
 import ProjectsBody from '../components/ProjectsBody';
 
-export default function Projetos() {
+export default function Projects() {
     return (
         <Wrapper>
             <Header />
