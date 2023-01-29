@@ -6,22 +6,32 @@ import Species from "./pages/Species";
 import Individuals from "./pages/Individuals";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
-import 'react-toastify/dist/ReactToastify.css';
+import { OrganizationContext } from "./contexts/organizationContext";
+import { useState } from "react";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function App() {
+  const [session, setSession] = useState({
+    organization: "",
+    token: ""
+})
+  
   return (
     <>
       <ToastContainer />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<SignUp />} />
-          <Route path="/login" element={<SignIn />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/projetos" element={<Projects />} />
-          <Route path="/especies" element={<Species />} />
-          <Route path="/individuals" element={<Individuals />} />
-        </Routes>
+        <OrganizationContext.Provider value={{ session, setSession }}>
+          <Routes>
+            <Route path="/" element={<SignIn />} />
+            <Route path="/cadastro" element={<SignUp />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/projetos" element={<Projects />} />
+            <Route path="/especies" element={<Species />} />
+            <Route path="/individuals" element={<Individuals />} />
+          </Routes>
+        </OrganizationContext.Provider>
       </BrowserRouter>
     </>
-  )
+  );
 }
+

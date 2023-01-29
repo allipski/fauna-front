@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Header from '../components/Header';
-import SpeciesBody from '../components/SpeciesBody';
+import SpeciesBody from '../components/Species/SpeciesBody';
 export default function Species() {
     return (
         <Wrapper>

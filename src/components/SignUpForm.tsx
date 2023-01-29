@@ -75,7 +75,7 @@ export default function SignUpForm() {
           <Loading />
         </button>
 
-        <p onClick={() => navigate("/login")}>
+        <p onClick={() => navigate("/")}>
           Já sou #fauna, quero fazer login!
         </p>
       </Form>
@@ -159,7 +159,7 @@ const Form = styled.form`
 
   p {
     font-size: 14px;
-    margin-top: 12px;
+    margin-top: 15px;
     text-decoration: underline;
     font-weight: 400;
     color: #283618;

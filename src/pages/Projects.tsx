@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Header from '../components/Header';
-import ProjectsBody from '../components/ProjectsBody';
+import ProjectsBody from '../components/Projects/ProjectsBody';
 
 export default function Projects() {
     return (

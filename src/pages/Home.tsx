@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Header from '../components/Header';
-import Dashboard from '../components/Dashboard';
+import Dashboard from '../components/Home/Dashboard';
 
 export default function Home() {
     return (

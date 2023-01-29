@@ -1,12 +1,16 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useForm } from "react-hook-form";
 import ReactLoading from "react-loading";
 import styled from "styled-components";
 import hello from "../assets/hello.svg";
 import { SignInData, signIn } from "../services/sessionApi";
+import { placeInLocalStorage } from "../utils/localStorage";
+import { OrganizationContext } from "../contexts/organizationContext";
+import { SessionType } from "../contexts/organizationContext";
 
 export default function SignInForm() {
+  const { session, setSession } = useContext(OrganizationContext) as SessionType;
   const navigate = useNavigate();
   const [data, setData] = useState("");
   const { register, handleSubmit } = useForm<SignInData>({
@@ -20,17 +24,18 @@ export default function SignInForm() {
     if (data === "loading") {
       return <ReactLoading type="spinningBubbles" />;
     } else {
-      return <>"Login"</>;
+      return <>Login</>;
     }
   }
 
   const onSubmit = handleSubmit(async (data) => {
     setData("loading");
     const signInData = await signIn(data);
-    console.log(signInData);
     setData(signInData || "");
     if (signInData) {
       setData("success");
+      setSession(signInData);
+      placeInLocalStorage(signInData);
       navigate("/home");
     }
   });
@@ -61,7 +66,7 @@ export default function SignInForm() {
           <Loading />
         </button>
 
-        <p onClick={() => navigate("/")}>
+        <p onClick={() => navigate("/cadastro")}>
           Ainda não sou #fauna! Quero me cadastrar!
         </p>
       </Form>
@@ -146,7 +151,7 @@ const Form = styled.form`
 
   p {
     font-size: 14px;
-    margin-top: 12px;
+    margin-top: 15px;
     text-decoration: underline;
     font-weight: 400;
     color: #283618;
