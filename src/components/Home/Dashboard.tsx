@@ -2,15 +2,23 @@ import styled from "styled-components";
 import { OrganizationContext, SessionType } from "../../contexts/organizationContext";
 import { useContext, useEffect } from "react";
 import { getFromLocalStorage } from "../../utils/localStorage";
+import { toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
     const { session, setSession } = useContext(OrganizationContext) as SessionType;
+    const navigate = useNavigate();
 
     useEffect(() => {
-        if(!session.organization) {
+        if (!session.organization) {
+          if (getFromLocalStorage()) {
             setSession(getFromLocalStorage());
+          } else {
+            toast("Sua sessão expirou! Por favor, faça o login novamente.");
+            navigate("/");
+          }
         }
-    }, [session])
+      }, [session]);
 
     return (
         <Wrapper>

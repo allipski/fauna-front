@@ -32,7 +32,7 @@ export default function SignUpForm() {
     setData(signUpData || "");
     if (signUpData) {
       setData("success");
-      navigate("/login");
+      navigate("/");
     }
   });
 

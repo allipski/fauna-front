@@ -24,7 +24,7 @@ export default function Header() {
 
   return (
     <Wrapper>
-      <img onClick={() => navigate("/")} src={fauna} />
+      <img onClick={() => navigate("/home")} src={fauna} />
       <h4 onClick={() => navigate("/projetos")}>Projetos</h4>
       <h4 onClick={() => navigate("/especies")}>Espécies</h4>
       <h4 onClick={() => navigate("/individuals")}>Indivíduos</h4>

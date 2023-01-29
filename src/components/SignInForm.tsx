@@ -1,16 +1,22 @@
 import { useNavigate } from "react-router-dom";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import ReactLoading from "react-loading";
 import styled from "styled-components";
 import hello from "../assets/hello.svg";
 import { SignInData, signIn } from "../services/sessionApi";
-import { placeInLocalStorage } from "../utils/localStorage";
+import {
+  placeInLocalStorage,
+  getFromLocalStorage,
+} from "../utils/localStorage";
 import { OrganizationContext } from "../contexts/organizationContext";
 import { SessionType } from "../contexts/organizationContext";
+import { toast } from "react-toastify";
 
 export default function SignInForm() {
-  const { session, setSession } = useContext(OrganizationContext) as SessionType;
+  const { session, setSession } = useContext(
+    OrganizationContext
+  ) as SessionType;
   const navigate = useNavigate();
   const [data, setData] = useState("");
   const { register, handleSubmit } = useForm<SignInData>({
@@ -19,6 +25,18 @@ export default function SignInForm() {
       password: "",
     },
   });
+
+  useEffect(() => {
+    if (!session.organization) {
+      if (getFromLocalStorage()) {
+        setSession(getFromLocalStorage());
+        navigate("/home");
+      } else {
+        toast("Sua sessão expirou! Por favor, faça o login novamente.");
+        navigate("/");
+      }
+    }
+  }, [session]);
 
   function Loading() {
     if (data === "loading") {
