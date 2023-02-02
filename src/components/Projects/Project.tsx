@@ -1,20 +1,25 @@
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 export default function Project({
+  id,
   name,
   description,
-  img
+  img,
 }: {
-  name: string,
-  description: string,
-  img: string
+  id: number;
+  name: string;
+  description: string;
+  img: string;
 }) {
+  const navigate = useNavigate();
+
   return (
     <Wrapper>
       <h2>{name}</h2>
-      <img src={img}/>
+      <img src={img} />
       <span>{description}</span>
-      <button>Ver Detalhes</button>
+      <button onClick={() => navigate(`/projetos/${id}`)}>Ver Detalhes</button>
     </Wrapper>
   );
 }
@@ -38,6 +43,7 @@ const Wrapper = styled.div`
   span {
     font-size: 16px;
     line-height: 20px;
+    min-height: 40px;
   }
 
   img {

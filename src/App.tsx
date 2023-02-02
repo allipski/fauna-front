@@ -9,6 +9,7 @@ import SignIn from "./pages/SignIn";
 import { OrganizationContext } from "./contexts/organizationContext";
 import { useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
+import ProjectPage from "./pages/ProjectPage";
 
 export default function App() {
   const [session, setSession] = useState({
@@ -26,6 +27,7 @@ export default function App() {
             <Route path="/cadastro" element={<SignUp />} />
             <Route path="/home" element={<Home />} />
             <Route path="/projetos" element={<Projects />} />
+            <Route path="/projetos/:id" element={<ProjectPage />} />
             <Route path="/especies" element={<Species />} />
             <Route path="/individuals" element={<Individuals />} />
           </Routes>

@@ -112,12 +112,12 @@ function AddNewModal({ modal, setModal }: ModalType) {
 const Wrapper = styled.div<Props>`
   display: ${(props) => (props.modal ? "flex" : "none")};
   flex-direction: column;
-  width: 60%;
+  width: 50%;
   background-color: #e5bd95;
   padding: 15px;
   border-radius: 15px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  z-index: 2;
+  z-index: 3;
 
   form {
     display: flex;
@@ -214,7 +214,7 @@ const Background = styled.div<Props>`
   align-items: center;
   justify-content: center;
   position: fixed;
-  z-index: 1;
+  z-index: 2;
   left: 0;
   top: 0;
   width: 100%;

@@ -12,7 +12,8 @@ import AddNewModal from "./AddNewModal";
 
 export type ProjectFetch = {
   data: {
-    name: string;
+    id: number,
+    name: string,
     description: string;
     img: string;
   }[];
@@ -60,6 +61,7 @@ export default function ProjectsBody() {
       ) : data ? (
         data.map((item) => (
           <Project
+            id={item.id}
             name={item.name}
             description={item.description}
             img={item.img}
@@ -87,8 +89,7 @@ const ProjectsContainer = styled.div`
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: space-between;
-  height: fit-content;
-  gap: 25px;
+  gap: 20px;
 `
 
 const AddNew = styled.div`
