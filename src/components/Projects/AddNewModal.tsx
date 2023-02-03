@@ -175,6 +175,7 @@ const Wrapper = styled.div<Props>`
   textarea {
     font-family: "Montserrat", sans-serif;
     font-size: 18px;
+    line-height: 20px;
     padding: 10px;
     margin: 10px 0;
     border-radius: 10px;

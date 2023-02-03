@@ -11,7 +11,7 @@ export async function newProject(token: string, data: NewProjectData) {
 
   try {
     const response = await api.post("/projects", data, config);
-    toast(`Projeto "${data.name}" criado com sucesso! recarregue a página e vê-lo na lista!`)
+    toast(`Projeto "${data.name}" criado com sucesso! recarregue a página para vê-lo na lista!`)
     return response.data;
   } catch (error) {
     toast('Não foi possível criar o projeto! Por favor, tente novamente.');

@@ -56,8 +56,6 @@ export default function ProjectPage() {
   const [showCard, setShowCard] = useState(false);
   const [cardInfo, setCardInfo] = useState<SingleSpecies>();
 
-  console.log(cardInfo);
-
   const { id } = useParams();
 
   const { session, setSession } = useContext(
@@ -166,13 +164,23 @@ export default function ProjectPage() {
                 ))
               ) : null}
             </ListBox>
-            <AddNew onClick={() => {setModal(!modal); setShowCard(false)}}>
+            <AddNew
+              onClick={() => {
+                setModal(!modal);
+                setShowCard(false);
+              }}
+            >
               <span className="material-symbols-outlined">add_circle</span>
               <h4>Nova Espécie</h4>
             </AddNew>
           </div>
           <Card showCard={showCard} cardInfo={cardInfo} />
-          <CardAddNew showCard={showCard} modal={modal} setModal={setModal} />
+          <CardAddNew
+            showCard={showCard}
+            modal={modal}
+            setModal={setModal}
+            projectId={Number(id)}
+          />
         </ThirdSection>
       </ProjectContainer>
     </Wrapper>

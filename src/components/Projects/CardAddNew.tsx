@@ -1,168 +1,234 @@
 import styled from "styled-components";
 import panda from "../../assets/newproject.svg";
-import { Dispatch, SetStateAction } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useState,
+  useEffect,
+  useContext,
+} from "react";
 import { useForm } from "react-hook-form";
+import { OrganizationContext } from "../../contexts/organizationContext";
+import { SessionType } from "../../contexts/organizationContext";
+import { useNavigate } from "react-router-dom";
+import { getFromLocalStorage } from "../../utils/localStorage";
+import { toast } from "react-toastify";
+import ReactLoading from "react-loading";
+import { newSpecies } from "../../services/speciesApi";
 
 export type NewSpeciesData = {
   name: string;
+  location: string;
+  status: string;
   img: string;
   description: string;
+  projectId: number;
 };
 
 export default function CardAddNew(props: {
   showCard: boolean;
   modal: boolean;
-  setModal: Dispatch<SetStateAction<boolean>>
+  setModal: Dispatch<SetStateAction<boolean>>;
+  projectId: number;
 }) {
+  const { session, setSession } = useContext(
+    OrganizationContext
+  ) as SessionType;
+
+  const navigate = useNavigate();
+
+  const [data, setData] = useState("");
+
+  useEffect(() => {
+    if (!session.organization) {
+      if (getFromLocalStorage()) {
+        setSession(getFromLocalStorage());
+      } else {
+        toast("Sua sessão expirou! Por favor, faça o login novamente.");
+        navigate("/");
+      }
+    }
+  }, [session]);
 
   const { register, handleSubmit, reset } = useForm<NewSpeciesData>({
     defaultValues: {
       name: "",
+      location: "",
+      status: "",
       img: "",
       description: "",
+      projectId: props.projectId,
     },
   });
 
-  // const onSubmit = handleSubmit(async (data) => {
-  //   setData("loading");
-  //   const newProjectData = await newProject(session.token, data);
-  //   setData(newProjectData || "");
-  //   if (newProjectData) {
-  //     setData("success");
-  //     setModal(!modal);
-  //     reset();
-  //   }
-  // });
+  const onSubmit = handleSubmit(async (data) => {
+    setData("loading");
+    const newSpeciesData = await newSpecies(session.token, data);
+    setData(newSpeciesData || "");
+    if (newSpeciesData) {
+      setData("success");
+      props.setModal(!props.modal);
+      reset();
+    }
+  });
+
+  function Loading() {
+    if (data === "loading") {
+      return <ReactLoading type="spinningBubbles" />;
+    } else {
+      return <>Adicionar espécie</>;
+    }
+  }
 
   return (
     <Wrapper showCard={props.showCard} modal={props.modal}>
+      <div>
         <div>
-          <div>
-            <img src={panda} />
-            <h2>Novo Projeto</h2>
-          </div>
-          <span
-            className="material-symbols-outlined"
-            // onClick={() => setModal(!modal)}
-          >
-            close
-          </span>
+          <img src={panda} />
+          <h2>Nova Espécie</h2>
         </div>
-        {/* <form onSubmit={onSubmit}>
-          <input
-            disabled={data === "loading" ? true : false}
-            type="text"
-            placeholder="nome"
-            {...register("name")}
-          ></input>
-          <input
-            disabled={data === "loading" ? true : false}
-            type="url"
-            placeholder="url da imagem"
-            {...register("img")}
-          ></input>
-          <textarea
-            disabled={data === "loading" ? true : false}
-            placeholder="descrição do projeto"
-            {...register("description")}
-            rows={4}
-          ></textarea>
-          <button type="submit">
-            <Loading />
-          </button>
-        </form> */}
-      </Wrapper>
+        <span
+          className="material-symbols-outlined"
+          onClick={() => props.setModal(!props.modal)}
+        >
+          close
+        </span>
+      </div>
+      <form onSubmit={onSubmit}>
+        <input
+          disabled={data === "loading" ? true : false}
+          type="text"
+          placeholder="nome"
+          {...register("name")}
+        ></input>
+        <input
+          disabled={data === "loading" ? true : false}
+          type="text"
+          placeholder="área de abrangência"
+          {...register("location")}
+        ></input>
+        <select
+          disabled={data === "loading" ? true : false}
+          placeholder="área de abrangência"
+          {...register("status")}
+        >
+          <option value="" disabled selected>
+            Status de preservação
+          </option>
+          <option value={"Levemente ameaçado"}>Levemente ameaçado</option>
+          <option value={"Moderadamente ameaçado"}>
+            Moderadamente ameaçado
+          </option>
+          <option value={"Severamente ameaçado"}>Severamente ameaçado</option>
+        </select>
+        <input
+          disabled={data === "loading" ? true : false}
+          type="url"
+          placeholder="url da imagem"
+          {...register("img")}
+        ></input>
+        <textarea
+          disabled={data === "loading" ? true : false}
+          placeholder="descrição da espécie"
+          {...register("description")}
+          rows={3}
+        ></textarea>
+        <button type="submit">
+          <Loading />
+        </button>
+      </form>
+    </Wrapper>
   );
 }
 
-const Wrapper = styled.div<{ showCard: boolean, modal: boolean }>`
-  display: ${(props) => (props.showCard === false && props.modal === true ? "flex" : "none")};
+const Wrapper = styled.div<{ showCard: boolean; modal: boolean }>`
+  display: ${(props) =>
+    props.showCard === false && props.modal === true ? "flex" : "none"};
   flex-direction: column;
   padding: 15px;
   gap: 15px;
-  background-color: red;
+  background-color: #e5bd95;
   border-radius: 2px;
   width: 100%;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 
   & > div {
+    align-items: center;
     display: flex;
     width: 100%;
+    justify-content: space-between;
     gap: 15px;
+
+    span:hover {
+      cursor: pointer;
+    }
   }
 
-  img {
-    object-fit: cover;
-    border-radius: 15px;
-    height: 280px;
-  }
-
-  h1 {
-    font-size: 20px;
-    line-height: 22px;
-    font-weight: 600;
-  }
-`;
-
-const CardInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 100%;
-  height: 100%;
-
-  & > div {
+  & > div > div {
     display: flex;
-    flex-direction: column;
-    gap: 7px;
-  }
+    align-items: center;
 
-  & > div:nth-of-type(2) {
-    flex-direction: row;
-    width: 100%;
-
-    div {
-      width: 50%;
-      border: #283618 1px solid;
+    img {
+      height: 25px;
     }
   }
 
   h2 {
-    font-size: 16px;
-    line-height: 18px;
-
-    span {
-      font-weight: 700;
-    }
-  }
-
-  button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    border-radius: 10px;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    font-family: "Montserrat", sans-serif;
-    font-size: 16px;
+    font-size: 20px;
+    line-height: 22px;
     font-weight: 600;
-    padding: 10px;
-    width: 100%;
-    background-color: #606c38;
-    color: #fefae0;
-    justify-self: flex-end;
   }
 
-  button:nth-of-type(2) {
-    background-color: white;
-    color: #283618;
-    gap: 7px;
-    border: 1px solid #283618;
-    font-weight: 400;
-  }
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 
-  button:hover {
-    cursor: pointer;
-    transform: scale(1.05);
+    input,
+    textarea,
+    select,
+    option {
+      font-family: "Montserrat", sans-serif;
+      font-size: 16px;
+      padding: 5px;
+      border-radius: 5px;
+      border: none;
+    }
+
+    textarea {
+      resize: none;
+      line-height: 18px;
+    }
+
+    select:hover {
+      cursor: pointer;
+    }
+
+    button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      border-radius: 15px;
+      box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+      font-family: "Montserrat", sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 13px;
+      width: 100%;
+      background-color: #606c38;
+      color: #fefae0;
+      transition: all 0.2s ease-in-out;
+
+      svg,
+      div {
+        max-height: 23px;
+      }
+    }
+
+    button:hover {
+      cursor: pointer;
+      transform: scale(1.01);
+    }
   }
 `;
