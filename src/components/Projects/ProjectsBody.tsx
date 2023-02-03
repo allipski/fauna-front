@@ -1,7 +1,13 @@
 import styled from "styled-components";
 import Project from "./Project";
 import useFetch from "../../hooks/useFetch";
-import { useEffect, useContext, useState, Dispatch, SetStateAction } from "react";
+import {
+  useEffect,
+  useContext,
+  useState,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import { getFromLocalStorage } from "../../utils/localStorage";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -12,8 +18,8 @@ import AddNewModal from "./AddNewModal";
 
 export type ProjectFetch = {
   data: {
-    id: number,
-    name: string,
+    id: number;
+    name: string;
     description: string;
     img: string;
   }[];
@@ -22,12 +28,12 @@ export type ProjectFetch = {
 };
 
 export type ModalType = {
-  modal: boolean,
-  setModal: Dispatch<SetStateAction<boolean>>
-}
+  modal: boolean;
+  setModal: Dispatch<SetStateAction<boolean>>;
+};
 
 export default function ProjectsBody() {
-  const [modal, setModal] = useState(false)
+  const [modal, setModal] = useState(false);
   const { session, setSession } = useContext(
     OrganizationContext
   ) as SessionType;
@@ -54,20 +60,21 @@ export default function ProjectsBody() {
         <span className="material-symbols-outlined">add_circle</span>
         <h4>Novo Projeto</h4>
       </AddNew>
-      <AddNewModal modal={modal} setModal={setModal}/>
+      <AddNewModal modal={modal} setModal={setModal} />
       <ProjectsContainer>
-      {loading ? (
-        <ReactLoading type="spinningBubbles" />
-      ) : data ? (
-        data.map((item) => (
-          <Project
-            id={item.id}
-            name={item.name}
-            description={item.description}
-            img={item.img}
-          />
-        ))
-      ) : null}
+        {loading ? (
+          <ReactLoading type="spinningBubbles" />
+        ) : data ? (
+          data.map((item, index) => (
+            <Project
+              key={index}
+              id={item.id}
+              name={item.name}
+              description={item.description}
+              img={item.img}
+            />
+          ))
+        ) : null}
       </ProjectsContainer>
     </Wrapper>
   );
@@ -90,7 +97,7 @@ const ProjectsContainer = styled.div`
   justify-content: space-between;
   align-items: space-between;
   gap: 20px;
-`
+`;
 
 const AddNew = styled.div`
   display: flex;
@@ -119,4 +126,4 @@ const AddNew = styled.div`
     color: #fefae0;
     cursor: pointer;
   }
-`
+`;

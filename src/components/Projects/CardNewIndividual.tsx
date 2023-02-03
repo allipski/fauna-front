@@ -8,19 +8,25 @@ import {
   useContext,
 } from "react";
 import { useForm } from "react-hook-form";
-import { OrganizationContext } from "../../contexts/organizationContext";
-import { SessionType } from "../../contexts/organizationContext";
+import {
+  OrganizationContext,
+  SessionType,
+} from "../../contexts/organizationContext";
 import { useNavigate } from "react-router-dom";
 import { getFromLocalStorage } from "../../utils/localStorage";
 import { toast } from "react-toastify";
 import ReactLoading from "react-loading";
-import { newSpecies } from "../../services/speciesApi";
-import { NewSpeciesData } from "../../types/types";
+import {
+  NewIndividualData,
+  SpeciesList,
+} from "../../types/types";
+import { newIndividual } from "../../services/individualsApi";
 
-export default function CardAddNew(props: {
+export default function CardNewIndividual(props: {
+  species: SpeciesList;
+  loadingSpecies: boolean;
   modal: boolean;
   setModal: Dispatch<SetStateAction<boolean>>;
-  projectId: number;
 }) {
   const { session, setSession } = useContext(
     OrganizationContext
@@ -47,22 +53,25 @@ export default function CardAddNew(props: {
     }
   },[props.modal])
 
-  const { register, handleSubmit, reset } = useForm<NewSpeciesData>({
+  const { register, handleSubmit, reset } = useForm<NewIndividualData>({
     defaultValues: {
       name: "",
-      location: "",
-      status: "",
+      geocode: "",
+      age: 0,
+      gender: "",
+      onRehab: true,
+      natureReady: false,
       img: "",
-      description: "",
-      projectId: props.projectId,
+      speciesId: 0,
     },
   });
-
+  
   const onSubmit = handleSubmit(async (data) => {
+    console.log(data);
     setData("loading");
-    const newSpeciesData = await newSpecies(session.token, data);
-    setData(newSpeciesData || "");
-    if (newSpeciesData) {
+    const newIndividualData = await newIndividual(session.token, data);
+    setData(newIndividualData || "");
+    if (newIndividualData) {
       setData("success");
       reset();
     }
@@ -72,7 +81,7 @@ export default function CardAddNew(props: {
     if (data === "loading") {
       return <ReactLoading type="spinningBubbles" />;
     } else {
-      return <>Adicionar espécie</>;
+      return <>Registrar indivíduo</>;
     }
   }
 
@@ -81,7 +90,7 @@ export default function CardAddNew(props: {
       <div>
         <div>
           <img src={panda} />
-          <h2>Nova Espécie</h2>
+          <h2>Novo Indivíduo</h2>
         </div>
         <span
           className="material-symbols-outlined"
@@ -97,25 +106,43 @@ export default function CardAddNew(props: {
           placeholder="nome"
           {...register("name")}
         ></input>
+        <select
+          disabled={data === "loading" ? true : false}
+          {...register("speciesId")}
+        >
+          <option value="" disabled selected>
+            espécie
+          </option>
+          {props.loadingSpecies
+            ? null
+            : props.species
+            ? props.species?.map((item, index) => (
+                <option key={index} value={item.id}>{item.name}</option>
+              ))
+            : null}{" "}
+        </select>
         <input
           disabled={data === "loading" ? true : false}
           type="text"
-          placeholder="área de abrangência"
-          {...register("location")}
+          placeholder="código de geolocalização"
+          {...register("geocode")}
+        ></input>
+        <input
+          disabled={data === "loading" ? true : false}
+          type="number"
+          min={0}
+          placeholder="idade"
+          {...register("age")}
         ></input>
         <select
           disabled={data === "loading" ? true : false}
-          placeholder="área de abrangência"
-          {...register("status")}
+          {...register("gender")}
         >
-          <option value="" disabled defaultValue={""}>
-            status de preservação
+          <option value="" disabled selected>
+            sexo
           </option>
-          <option value={"Levemente ameaçado"}>Levemente ameaçado</option>
-          <option value={"Moderadamente ameaçado"}>
-            Moderadamente ameaçado
-          </option>
-          <option value={"Severamente ameaçado"}>Severamente ameaçado</option>
+          <option value={"Fêmea"}>Fêmea</option>
+          <option value={"Macho"}>Macho</option>
         </select>
         <input
           disabled={data === "loading" ? true : false}
@@ -123,12 +150,6 @@ export default function CardAddNew(props: {
           placeholder="url da imagem"
           {...register("img")}
         ></input>
-        <textarea
-          disabled={data === "loading" ? true : false}
-          placeholder="descrição da espécie"
-          {...register("description")}
-          rows={3}
-        ></textarea>
         <button type="submit">
           <Loading />
         </button>
@@ -138,7 +159,7 @@ export default function CardAddNew(props: {
 }
 
 const Wrapper = styled.div<{ modal: boolean }>`
-  display: ${(props) => props.modal ? "flex" : "none"};
+  display: ${(props) => (props.modal === true ? "flex" : "none")};
   flex-direction: column;
   padding: 15px;
   gap: 15px;

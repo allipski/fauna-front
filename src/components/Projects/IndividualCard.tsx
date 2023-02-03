@@ -1,50 +1,41 @@
 import styled from "styled-components";
-import { IndividualList, SingleSpecies } from "../../types/types";
-import DataButton from "./DataButton";
+import { IndividualList, SingleIndividual } from "../../types/types";
 
-export default function Card(props: {
-  showCard: boolean;
-  cardInfo: SingleSpecies | undefined;
-  individuals: IndividualList;
-  loadingIndividuals: boolean;
+export default function IndividualCard(props: {
+  showIndividualCard: boolean;
+  individualCardInfo: SingleIndividual | undefined;
+  infoType: number;
 }) {
-
   return (
-    <CardWrapper showCard={props.showCard}>
-      <h1>{props.cardInfo?.name}</h1>
+    <CardWrapper showIndividualCard={props.showIndividualCard}>
+      <h1>{props.individualCardInfo?.name}</h1>
       <div>
-        <img src={props.cardInfo?.img} />
+        <img src={props.individualCardInfo?.img} />
         <CardInfo>
           <div>
             <h2>
-              <span>Localização: </span>{props.cardInfo?.location}
+              <span>Idade: </span>
+              {props.individualCardInfo?.age}
             </h2>
             <h2>
-              <span>Status: </span>{props.cardInfo?.status}
+              <span>Sexo: </span>
+              {props.individualCardInfo?.gender}
             </h2>
             <h2>
-              <span>Número de indivíduos monitorados: </span>
-              {props.loadingIndividuals
-                ? null
-                : props.individuals
-                ? props.individuals?.filter(
-                    (item) => item.speciesId === props.cardInfo?.id
-                  ).length
-                : null}
+              <span>
+                {props.infoType === 2 ? "Data de soltura: " : "Data de captura: "}
+              </span>
+              17/10/2021
+            </h2>
+            <h2>
+              <span>
+                {props.infoType === 2 ? "Próximo monitoramento: " : "Previsão de soltura: "}
+              </span>
+              25/02/2023
             </h2>
           </div>
           <div>
-            <DataButton
-              numberCount={45}
-              description={"Indivíduos reabilitados"}
-            />
-            <DataButton
-              numberCount={22}
-              description={"Indivíduos sob cuidado"}
-            />
-          </div>
-          <div>
-            <button>Ver espécie</button>
+            <button>Ver detalhes</button>
             <button>
               <p>Exportar Dados</p>
             </button>
@@ -55,13 +46,14 @@ export default function Card(props: {
   );
 }
 
-const CardWrapper = styled.div<{ showCard: boolean }>`
-  display: ${(props) => (props.showCard ? "flex" : "none")};
+const CardWrapper = styled.div<{ showIndividualCard: boolean }>`
+  display: ${(props) => (props.showIndividualCard ? "flex" : "none")};
   flex-direction: column;
   padding: 15px;
   gap: 15px;
   background-color: white;
   border-radius: 2px;
+  width: 100%;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 
   & > div {
@@ -74,8 +66,6 @@ const CardWrapper = styled.div<{ showCard: boolean }>`
     object-fit: cover;
     border-radius: 15px;
     height: 280px;
-    min-width: 350px;
-    max-width: 400px;
   }
 
   h1 {

@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 import api from "./api";
-import { NewSpeciesData } from "../components/Projects/CardAddNew";
+import { NewSpeciesData } from "../types/types";
 
 export async function newSpecies(token: string, data: NewSpeciesData) {
     const config = {

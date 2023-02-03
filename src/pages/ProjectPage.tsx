@@ -8,53 +8,34 @@ import { getFromLocalStorage } from "../utils/localStorage";
 import { toast } from "react-toastify";
 import useFetch from "../hooks/useFetch";
 import useSpecies from "../hooks/useSpecies";
+import useIndividuals from "../hooks/useIndividuals";
 import DataButton from "../components/Projects/DataButton";
 import Card from "../components/Projects/Card";
 import ListItem from "../components/Projects/ListItem";
 import ReactLoading from "react-loading";
 import CardAddNew from "../components/Projects/CardAddNew";
-
-export type SingleProjectType = {
-  data: {
-    id: number;
-    name: string;
-    description: string;
-    img: string;
-  };
-  loading: boolean;
-  error: unknown;
-};
-
-export type SpeciesFetch = {
-  species: {
-    name: string;
-    location: string;
-    status: string;
-    img: string;
-    projectId: number;
-    _count: {
-      individuals: number;
-    };
-  }[];
-  loadingSpecies: boolean;
-  errorSpecies: unknown;
-};
-
-export type SingleSpecies = {
-  name: string;
-  location: string;
-  status: string;
-  img: string;
-  projectId: number;
-  _count: {
-    individuals: number;
-  };
-};
+import {
+  SingleSpecies,
+  SingleProjectType,
+  SpeciesFetch,
+  IndividualsFetch,
+  SingleIndividual,
+} from "../types/types";
+import IndividualCard from "../components/Projects/IndividualCard";
+import CardNewIndividual from "../components/Projects/CardNewIndividual";
 
 export default function ProjectPage() {
   const [infoType, setInfoType] = useState(0);
   const [showCard, setShowCard] = useState(false);
+  const [showIndividualCard, setShowIndividualCard] = useState(false);
+  const [showIndividualCardTwo, setShowIndividualCardTwo] = useState(false);
   const [cardInfo, setCardInfo] = useState<SingleSpecies>();
+  const [individualCardInfo, setIndividualCardInfo] =
+    useState<SingleIndividual>();
+  const [individualCardInfoTwo, setIndividualCardInfoTwo] =
+    useState<SingleIndividual>();
+  const [modal, setModal] = useState(false);
+  const [modalTwo, setModalTwo] = useState(false);
 
   const { id } = useParams();
 
@@ -74,6 +55,20 @@ export default function ProjectPage() {
     Number(id)
   ) as SpeciesFetch;
 
+  const allIndividuals = useIndividuals({
+    token: session.token,
+  }) as IndividualsFetch;
+
+  const releasedIndividuals = useIndividuals({
+    token: session.token,
+    released: true,
+  }) as IndividualsFetch;
+
+  const rehabIndividuals = useIndividuals({
+    token: session.token,
+    rehab: true,
+  }) as IndividualsFetch;
+
   useEffect(() => {
     if (!session.organization) {
       if (getFromLocalStorage()) {
@@ -85,7 +80,71 @@ export default function ProjectPage() {
     }
   }, [session]);
 
-  const [modal, setModal] = useState(false);
+  function listItems() {
+    if (infoType === 0) {
+      return [];
+    } else if (infoType === 1) {
+      return species;
+    } else if (infoType === 2) {
+      return releasedIndividuals.individuals;
+    } else if (infoType === 3) {
+      return rehabIndividuals.individuals;
+    } else if (infoType === 4) {
+      return species;
+    } else if (infoType === 5) {
+      return species;
+    }
+  }
+
+  function loadingItems() {
+    if (infoType === 0) {
+      return [];
+    } else if (infoType === 1) {
+      return loadingSpecies;
+    } else if (infoType === 2) {
+      return releasedIndividuals.loadingIndividuals;
+    } else if (infoType === 3) {
+      return rehabIndividuals.loadingIndividuals;
+    } else if (infoType === 4) {
+      return species;
+    } else if (infoType === 5) {
+      return species;
+    }
+  }
+
+  function clickListItem(index: number) {
+    setModal(false);
+    if (infoType === 1) {
+      if (cardInfo === species[index]) {
+        setShowCard(!showCard);
+      } else {
+        setShowCard(true);
+        setCardInfo(species[index]);
+      }
+    } else if (infoType === 2) {
+      if (individualCardInfo === releasedIndividuals.individuals[index]) {
+        setShowIndividualCard(!showIndividualCard);
+      } else {
+        setShowIndividualCard(true);
+        setIndividualCardInfo(releasedIndividuals.individuals[index]);
+      }
+    } else if (infoType === 3) {
+      if (individualCardInfo === rehabIndividuals.individuals[index]) {
+        setShowIndividualCardTwo(!showIndividualCardTwo);
+      } else {
+        setShowIndividualCardTwo(true);
+        setIndividualCardInfoTwo(rehabIndividuals.individuals[index]);
+      }
+    }
+  }
+
+  function hideAllCards() {
+    setShowCard(false);
+    setShowIndividualCard(false);
+    setShowIndividualCardTwo(false);
+    setModal(false);
+    setModalTwo(false);
+  }
 
   return (
     <Wrapper>
@@ -106,36 +165,63 @@ export default function ProjectPage() {
             <ReactLoading type="spinningBubbles" />
           ) : species ? (
             <DataButton
-              onClick={() => setInfoType(infoType === 1 ? 0 : 1)}
+              onClick={() => {
+                setInfoType(infoType === 1 ? 0 : 1);
+                hideAllCards();
+              }}
               infoType={infoType}
               idNumber={1}
-              numberCount={species.length}
+              numberCount={loadingSpecies ? 0 : species ? species?.length : 0}
               description={"Espécies em monitoramento"}
             />
           ) : null}
           <DataButton
-            onClick={() => setInfoType(infoType === 2 ? 0 : 2)}
+            onClick={() => {
+              setInfoType(infoType === 2 ? 0 : 2);
+              hideAllCards();
+            }}
             infoType={infoType}
             idNumber={2}
-            numberCount={46}
+            numberCount={
+              releasedIndividuals.loadingIndividuals
+                ? 0
+                : releasedIndividuals.individuals
+                ? releasedIndividuals.individuals?.length
+                : 0
+            }
             description={"Indivíduos reabilitados"}
           />
           <DataButton
-            onClick={() => setInfoType(infoType === 3 ? 0 : 3)}
+            onClick={() => {
+              setInfoType(infoType === 3 ? 0 : 3);
+              hideAllCards();
+            }}
             infoType={infoType}
             idNumber={3}
-            numberCount={23}
+            numberCount={
+              rehabIndividuals.loadingIndividuals
+                ? 0
+                : rehabIndividuals.individuals
+                ? rehabIndividuals.individuals?.length
+                : 0
+            }
             description={"Indivíduos sob cuidado"}
           />
           <DataButton
-            onClick={() => setInfoType(infoType === 4 ? 0 : 4)}
+            onClick={() => {
+              setInfoType(infoType === 4 ? 0 : 4);
+              hideAllCards();
+            }}
             infoType={infoType}
             idNumber={4}
             numberCount={9}
             description={"Ações comunitárias"}
           />
           <DataButton
-            onClick={() => setInfoType(infoType === 5 ? 0 : 5)}
+            onClick={() => {
+              setInfoType(infoType === 5 ? 0 : 5);
+              hideAllCards();
+            }}
             infoType={infoType}
             idNumber={5}
             numberCount={16}
@@ -145,20 +231,13 @@ export default function ProjectPage() {
         <ThirdSection infoType={infoType}>
           <div>
             <ListBox>
-              {loadingSpecies ? (
+              {loadingItems() ? (
                 <ReactLoading type="spinningBubbles" />
-              ) : species ? (
-                species.map((item, index) => (
+              ) : listItems() ? (
+                listItems()?.map((item, index) => (
                   <ListItem
-                    onClick={() => {
-                      setModal(false);
-                      if (cardInfo === species[index]) {
-                        setShowCard(!showCard);
-                      } else {
-                        setShowCard(true);
-                        setCardInfo(species[index]);
-                      }
-                    }}
+                    key={index}
+                    onClick={() => clickListItem(index)}
                     name={item.name}
                   />
                 ))
@@ -166,20 +245,48 @@ export default function ProjectPage() {
             </ListBox>
             <AddNew
               onClick={() => {
-                setModal(!modal);
+                if (infoType === 1) {
+                  setModal(!modal);
+                  setModalTwo(false);
+                } else {
+                  setModalTwo(!modalTwo);
+                  setModal(false);
+                }
                 setShowCard(false);
+                setShowIndividualCard(false);
+                setShowIndividualCardTwo(false);
               }}
             >
               <span className="material-symbols-outlined">add_circle</span>
-              <h4>Nova Espécie</h4>
+              <h4>{infoType === 1 ? "Espécie" : "Indivíduo"}</h4>
             </AddNew>
           </div>
-          <Card showCard={showCard} cardInfo={cardInfo} />
-          <CardAddNew
+          <Card
             showCard={showCard}
+            cardInfo={cardInfo}
+            individuals={allIndividuals.individuals}
+            loadingIndividuals={allIndividuals.loadingIndividuals}
+          />
+          <CardAddNew
             modal={modal}
             setModal={setModal}
             projectId={Number(id)}
+          />
+          <CardNewIndividual
+            species={species}
+            loadingSpecies={loadingSpecies}
+            modal={modalTwo}
+            setModal={setModalTwo}
+          />
+          <IndividualCard
+            showIndividualCard={showIndividualCard}
+            individualCardInfo={individualCardInfo}
+            infoType={infoType}
+          />
+          <IndividualCard
+            showIndividualCard={showIndividualCardTwo}
+            individualCardInfo={individualCardInfoTwo}
+            infoType={infoType}
           />
         </ThirdSection>
       </ProjectContainer>
@@ -203,12 +310,14 @@ const ProjectContainer = styled.div`
   align-items: space-between;
   padding: 50px 15% 30px 15%;
   z-index: 0;
+  min-width: 950px;
 `;
 
 const FirstSection = styled.div`
   display: flex;
   gap: 15px;
   max-width: 100%;
+  min-width: 950px;
 
   img {
     min-width: 60%;
@@ -267,6 +376,7 @@ const SecondSection = styled.div`
   background-color: white;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
   max-width: 100%;
+  min-width: 950px;
 `;
 
 const ThirdSection = styled.div<{ infoType: number }>`
@@ -275,6 +385,7 @@ const ThirdSection = styled.div<{ infoType: number }>`
   gap: 15px;
   height: 350px;
   max-width: 100%;
+  min-width: 950px;
 
   & > div:first-of-type {
     background-color: white;
@@ -291,8 +402,9 @@ const ListBox = styled.div`
   padding: 15px 0 55px 0;
   background-color: white;
   display: flex;
+  height: 100%;
   flex-direction: column;
-  width: 220px;
+  min-width: 220px;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
   border-radius: 2px;
   position: relative;
