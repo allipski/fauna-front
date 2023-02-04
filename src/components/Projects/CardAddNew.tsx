@@ -105,7 +105,6 @@ export default function CardAddNew(props: {
         ></input>
         <select
           disabled={data === "loading" ? true : false}
-          placeholder="área de abrangência"
           {...register("status")}
         >
           <option value="" disabled defaultValue={""}>

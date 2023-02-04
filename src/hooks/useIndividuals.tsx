@@ -29,7 +29,7 @@ function useIndividuals(props: {
       .then((response) => setIndividuals(response.data))
       .catch((error) => setErrorIndividuals(error))
       .finally(() => setLoadingIndividuals(false));
-  }, [props.token]);
+  }, [props.token, props.rehab, props.released, props.speciesId]);
 
   return { individuals, loadingIndividuals, errorIndividuals } as unknown;
 }

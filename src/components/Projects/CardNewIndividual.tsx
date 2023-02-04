@@ -119,7 +119,7 @@ export default function CardNewIndividual(props: {
             ? props.species?.map((item, index) => (
                 <option key={index} value={item.id}>{item.name}</option>
               ))
-            : null}{" "}
+            : null}
         </select>
         <input
           disabled={data === "loading" ? true : false}

@@ -50,10 +50,10 @@ export default function ProjectPage() {
     `/projects/${id}`
   ) as SingleProjectType;
 
-  const { species, loadingSpecies } = useSpecies(
-    session.token,
-    Number(id)
-  ) as SpeciesFetch;
+  const { species, loadingSpecies } = useSpecies({
+    token: session.token,
+    projectId: Number(id)
+  }) as SpeciesFetch;
 
   const allIndividuals = useIndividuals({
     token: session.token,

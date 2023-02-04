@@ -15,22 +15,8 @@ import { OrganizationContext } from "../../contexts/organizationContext";
 import ReactLoading from "react-loading";
 import { SessionType } from "../../contexts/organizationContext";
 import AddNewModal from "./AddNewModal";
+import { ProjectFetch, ModalType } from "../../types/types";
 
-export type ProjectFetch = {
-  data: {
-    id: number;
-    name: string;
-    description: string;
-    img: string;
-  }[];
-  loading: boolean;
-  error: unknown;
-};
-
-export type ModalType = {
-  modal: boolean;
-  setModal: Dispatch<SetStateAction<boolean>>;
-};
 
 export default function ProjectsBody() {
   const [modal, setModal] = useState(false);

@@ -1,14 +1,15 @@
 import styled from "styled-components";
+import { SingleSpecies } from "../../types/types";
 
-export default function SpeciesCard() {
+export default function SpeciesCard(props: {species: SingleSpecies}) {
     return (
         <Wrapper>
-            <h2>Species X</h2>
-            <img src="https://www.volunteerhq.org/images/projects/belize/volunteer-abroad-in-belize-ivhq-environmental-marine-conservation.jpg" />
+            <h2>{props.species.name}</h2>
+            <img src={props.species.img} />
             <TagsContainer>
-                <StatusTag>ENDANGERED</StatusTag>
-                <ProjectTag>Projeto X</ProjectTag>
-                <LocationTag>Mount Valley</LocationTag>
+                <StatusTag>{props.species.status}</StatusTag>
+                <ProjectTag>Projeto {props.species.id}</ProjectTag>
+                <LocationTag>{props.species.location}</LocationTag>
             </TagsContainer>
             <button>Ver Ficha Técnica</button>
         </Wrapper>
@@ -20,14 +21,14 @@ const Wrapper = styled.div`
     flex-direction: column;
     background-color: #FFFFFF;
     padding: 20px;
-    width: 23%;
+    width: 31%;
     border-radius: 15px;
     gap: 8px;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 
     h2 {
-        font-weight: 700;
-        font-size: 25px;
+        font-weight: 600;
+        font-size: 23px;
         color: #606C38;
     }
 
@@ -40,12 +41,12 @@ const Wrapper = styled.div`
 
     button {
         border: none;
-        border-radius: 15px;
+        border-radius: 10px;
         box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
         font-family: 'Montserrat', sans-serif;
-        font-size: 16px;
-        font-weight: 700;
-        padding: 15px;
+        font-size: 14px;
+        font-weight: 500;
+        padding: 10px;
         width: 100%;
         background-color: #606C38;
         color: #FEFAE0;

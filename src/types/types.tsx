@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react";
+
 type SingleProjectType = {
   data: {
     id: number;
@@ -17,6 +19,15 @@ type NewSpeciesData = {
   description: string;
   projectId: number;
 };
+
+type FilterSpecies = {
+  token: string,
+  name?: string,
+  location?: string,
+  status?: string,
+  projectId?: number
+};
+
 
 type SpeciesFetch = {
   species: {
@@ -106,6 +117,22 @@ type IndividualList = {
     speciesId: number;
   };
 
+  type ProjectFetch = {
+    data: {
+      id: number;
+      name: string;
+      description: string;
+      img: string;
+    }[];
+    loading: boolean;
+    error: unknown;
+  };
+  
+type ModalType = {
+    modal: boolean;
+    setModal: Dispatch<SetStateAction<boolean>>;
+  };
+
 export type {
   SingleProjectType,
   SingleSpecies,
@@ -115,5 +142,8 @@ export type {
   SpeciesFetch,
   IndividualsFetch,
   NewSpeciesData,
-  SpeciesList
+  SpeciesList,
+  FilterSpecies,
+  ProjectFetch,
+  ModalType
 };
