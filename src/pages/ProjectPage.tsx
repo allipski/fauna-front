@@ -66,7 +66,7 @@ export default function ProjectPage() {
 
   const rehabIndividuals = useIndividuals({
     token: session.token,
-    rehab: true,
+    onRehab: true,
   }) as IndividualsFetch;
 
   useEffect(() => {
@@ -157,7 +157,7 @@ export default function ProjectPage() {
               <h1>{data?.name}</h1>
               <h3>{data?.description}</h3>
             </div>
-            <button>Ver espécies monitoradas</button>
+            <button>Ver detalhes do projeto</button>
           </MostImportantSection>
         </FirstSection>
         <SecondSection>

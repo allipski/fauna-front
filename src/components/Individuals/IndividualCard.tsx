@@ -1,13 +1,15 @@
 import styled from "styled-components";
+import { SingleIndividual, SingleSpecies } from "../../types/types";
 
-export default function IndividualsCard() {
+export default function IndividualCard(props: {individual: SingleIndividual}) {
     return (
         <Wrapper>
-            <h2>Individual X</h2>
-            <img src="https://www.volunteerhq.org/images/projects/belize/volunteer-abroad-in-belize-ivhq-environmental-marine-conservation.jpg" />
+            <h2>{props.individual.name}</h2>
+            <img src={props.individual.img} />
             <TagsContainer>
-                <SpeciesTag>homo sapiens</SpeciesTag>
-                <ProjectTag>Projeto X</ProjectTag>
+                <StatusTag>{props.individual.species.name}</StatusTag>
+                <ProjectTag>ID: {props.individual.geocode}</ProjectTag>
+                <LocationTag>{props.individual.species.location}</LocationTag>
             </TagsContainer>
             <button>Ver Ficha Técnica</button>
         </Wrapper>
@@ -19,14 +21,14 @@ const Wrapper = styled.div`
     flex-direction: column;
     background-color: #FFFFFF;
     padding: 20px;
-    width: 23%;
+    width: 31%;
     border-radius: 15px;
     gap: 8px;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 
     h2 {
-        font-weight: 700;
-        font-size: 25px;
+        font-weight: 600;
+        font-size: 23px;
         color: #606C38;
     }
 
@@ -39,12 +41,12 @@ const Wrapper = styled.div`
 
     button {
         border: none;
-        border-radius: 15px;
+        border-radius: 10px;
         box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
         font-family: 'Montserrat', sans-serif;
-        font-size: 16px;
-        font-weight: 700;
-        padding: 15px;
+        font-size: 14px;
+        font-weight: 500;
+        padding: 10px;
         width: 100%;
         background-color: #606C38;
         color: #FEFAE0;
@@ -55,12 +57,20 @@ const Wrapper = styled.div`
     }
 `;
 
-const SpeciesTag = styled.span`
+const StatusTag = styled.span`
     font-size: 12px;
     line-height: 20px;
-    font-style: italic;
     border-radius: 7px;
-    background-color: yellow;
+    background-color: red;
+    padding: 3px 8px;
+    width: fit-content;
+`
+
+const LocationTag = styled.span`
+    font-size: 12px;
+    line-height: 20px;
+    border-radius: 7px;
+    background-color: lightcoral;
     padding: 3px 8px;
     width: fit-content;
 `
