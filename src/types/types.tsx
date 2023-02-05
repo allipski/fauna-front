@@ -11,6 +11,12 @@ type SingleProjectType = {
   error: unknown;
 };
 
+type UpdateProject = {
+  name?: string;
+  description?: string;
+  img?: string;
+};
+
 type NewSpeciesData = {
   name: string;
   location: string;
@@ -73,6 +79,13 @@ type IndividualsFetch = {
   loadingIndividuals: boolean;
   errorIndividuals: unknown;
 };
+
+type UpdateOrganization = {
+  name?: string;
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+}
 
 type IndividualList = SingleIndividual [];
 
@@ -143,6 +156,8 @@ export type {
   SpeciesList,
   FilterSpecies,
   FilterIndividuals,
+  UpdateProject,
   ProjectFetch,
   ModalType,
+  UpdateOrganization
 };

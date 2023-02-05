@@ -15,7 +15,7 @@ import { OrganizationContext } from "../../contexts/organizationContext";
 import ReactLoading from "react-loading";
 import { SessionType } from "../../contexts/organizationContext";
 import AddNewModal from "./AddNewModal";
-import { ProjectFetch, ModalType } from "../../types/types";
+import { ProjectFetch } from "../../types/types";
 
 
 export default function ProjectsBody() {

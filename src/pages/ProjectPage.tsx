@@ -157,7 +157,7 @@ export default function ProjectPage() {
               <h1>{data?.name}</h1>
               <h3>{data?.description}</h3>
             </div>
-            <button>Ver detalhes do projeto</button>
+            <button onClick={() => navigate(`/projetos/${id}/details`)}>Ver detalhes do projeto</button>
           </MostImportantSection>
         </FirstSection>
         <SecondSection>

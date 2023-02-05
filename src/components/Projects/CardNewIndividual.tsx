@@ -67,7 +67,6 @@ export default function CardNewIndividual(props: {
   });
   
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data);
     setData("loading");
     const newIndividualData = await newIndividual(session.token, data);
     setData(newIndividualData || "");

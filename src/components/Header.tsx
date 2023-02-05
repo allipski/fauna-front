@@ -28,7 +28,7 @@ export default function Header() {
       <h4 onClick={() => navigate("/projetos")}>Projetos</h4>
       <h4 onClick={() => navigate("/especies")}>Espécies</h4>
       <h4 onClick={() => navigate("/individuals")}>Indivíduos</h4>
-      <h4>Organização</h4>
+      <h4 onClick={() => navigate("/organization")}>Organização</h4>
       <h4 onClick={logout}>
         <span className="material-symbols-outlined">logout</span>
       </h4>
