@@ -120,7 +120,7 @@ export default function ProjectDetailsEdit(props: { id: number }) {
           </div>
         </LeftContainer>
         <RightContainer>
-          <img src={data.img} />
+          <img src={data?.img} />
         </RightContainer>
       </div>
     </Wrapper>
